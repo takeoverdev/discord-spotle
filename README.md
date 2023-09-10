@@ -28,5 +28,7 @@ Nationality is:
 The artist's birthplace, will indicate yellow if the mystery artist lives in the guessed continent. 
 
 ![](https://i.imgur.com/2MkVrUk.png)
+
 ![](https://i.imgur.com/B3YdMXZ.png)
+
 ![](https://i.imgur.com/H91JoMs.png)
