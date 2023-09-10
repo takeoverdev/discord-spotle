@@ -29,6 +29,5 @@ The artist's birthplace, will indicate yellow if the mystery artist lives in the
 
 
 
-
-![](https://imgur.com/a/GnxXwf4)
-![](https://imgur.com/a/E03PKHD)
+![](https://i.imgur.com/Tmb4j3i.png)
+![](https://i.imgur.com/JDhsWcQ.png)
