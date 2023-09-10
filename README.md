@@ -27,7 +27,6 @@ A music style that consists of: Rock, Pop, Hip Hop, Country, Indie, R&B, K-Pop, 
 Nationality is: 
 The artist's birthplace, will indicate yellow if the mystery artist lives in the guessed continent. 
 
-
-
-![](https://i.imgur.com/Tmb4j3i.png)
-![](https://i.imgur.com/JDhsWcQ.png)
+![](https://i.imgur.com/2MkVrUk.png)
+![](https://i.imgur.com/B3YdMXZ.png)
+![](https://i.imgur.com/H91JoMs.png)
