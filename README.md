@@ -1,5 +1,6 @@
 # discord-spotle
 Discord version of Spotle.io, Spotify artist guessing game with public and custom games to play with friends or solo
+[Invite here](https://discord.com/api/oauth2/authorize?client_id=605158899506610220&permissions=2048&scope=applications.commands%20bot)
 
 
 ## The music-oriented Wordle type game! 
