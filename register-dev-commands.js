@@ -16,25 +16,32 @@ const commands = [
     ],
   },
   {
-    name: "test-command",
-    description: "Test Response",
-    // options: [
-    //   {
-    //     name: "value",
-    //     description: "value",
-    //     type: 3,
-    //     required: true,
-    //   },
-    // ],
+    name: "eval",
+    description: "Evaluates JavaScript code and executes it",
+    options: [
+      {
+        name: "code",
+        description: "code",
+        type: 3,
+        required: true,
+      },
+    ],
   },
 ];
-
-const rest = new REST({ version: 10 }).setToken(process.env.TOKEN);
+let rest;
+let clientID;
+if (process.env.TEST_ENVIRONMENT === "TRUE") {
+  rest = new REST({ version: 10 }).setToken(process.env.TEST_TOKEN);
+  clientID = "1152673623325294602";
+} else {
+  rest = new REST({ version: 10 }).setToken(process.env.TOKEN);
+  clientID = "605158899506610220";
+}
 
 (async () => {
   try {
     console.log("Started to refresh slash commands");
-    const data = await rest.put(Routes.applicationGuildCommands(process.env.CLIENT_ID, process.env.DEV_GUILD), {
+    const data = await rest.put(Routes.applicationGuildCommands(clientID, process.env.DEV_GUILD), {
       body: commands,
     });
     // const data = await rest.put(Routes.applicationCommands(process.env.CLIENT_ID), {

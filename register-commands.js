@@ -55,11 +55,19 @@ const commands = [
   },
   {
     name: "help",
-    description: "Displays information about the bot",
+    description: "Displays information and guidance about the bot",
   },
 ];
 
-const rest = new REST({ version: 10 }).setToken(process.env.TOKEN);
+let rest;
+let clientID;
+if (process.env.TEST_ENVIRONMENT === "TRUE") {
+  rest = new REST({ version: 10 }).setToken(process.env.TEST_TOKEN);
+  clientID = "1152673623325294602";
+} else {
+  rest = new REST({ version: 10 }).setToken(process.env.TOKEN);
+  clientID = "605158899506610220";
+}
 
 (async () => {
   try {
@@ -67,7 +75,7 @@ const rest = new REST({ version: 10 }).setToken(process.env.TOKEN);
     // const data = await rest.put(Routes.applicationGuildCommands(process.env.CLIENT_ID, process.env.DEV_GUILD), {
     // body: commands,
     // });
-    const data = await rest.put(Routes.applicationCommands(process.env.CLIENT_ID), {
+    const data = await rest.put(Routes.applicationCommands(clientID), {
       body: commands,
     });
     console.log("Successfully refreshed slash commands");

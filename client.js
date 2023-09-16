@@ -59,7 +59,10 @@ client.on("interactionCreate", async (interaction) => {
   if (interaction.user.bot) return;
 
   let userData = await Data.findOne({ userID: interaction.user.id }).catch((err) => console.log(err));
+  let newUser = false;
+  const welcomeEmbed = new discord.EmbedBuilder();
   if (!userData) {
+    newUser = true;
     var newData = new Data({
       userID: interaction.user.id,
       username: interaction.user.username,
@@ -70,6 +73,15 @@ client.on("interactionCreate", async (interaction) => {
     });
     newData.save().catch((err) => console.log(err));
     userData = newData;
+    welcomeEmbed.setTitle(`Welcome to Spotle, ${interaction.user.username}!`);
+    welcomeEmbed.setColor("#1ED760");
+    welcomeEmbed.setDescription(`The music-oriented Wordle type game! 
+    Create custom games for your friends to guess your selected mystery artist and participate in a public game with a random mystery artist generated each day. 
+    Once you guess, you will be prompted with how close you were to the mystery artist. 
+    Create custom games and challenge your friends to guess your selected artist! 
+    Participate in Today's randomly selected mystery artist: </public:1149454927047950491>
+    Then guess the artist using: </guess:1149454927047950489>
+    Instead, you can create your own custom game to play with your friends using: </custom:1149454927047950487>, and they can join using </join:1149454927047950488>`);
   }
 
   const command = interaction.client.commands.get(interaction.commandName);
@@ -78,9 +90,10 @@ client.on("interactionCreate", async (interaction) => {
   }
   try {
     await command.execute(interaction);
+    if (newUser) interaction.followUp({ embeds: [welcomeEmbed], ephemeral: true });
   } catch (err) {
     console.log(err);
   }
 });
 
-client.login(process.env.TOKEN);
+process.env.TEST_ENVIRONMENT === "TRUE" ? client.login(process.env.TEST_TOKEN) : client.login(process.env.TOKEN);
