@@ -54,26 +54,6 @@ module.exports.clientOn = client.on("ready", () => {
   });
 });
 
-client.on("guildCreate", (guild) => {
-  let embed = new discord.EmbedBuilder();
-  embed.setTitle("Joined Server");
-  embed.addFields({ name: "Name", value: `${guild.name}` }, { name: "ID", value: `${guild.id}` });
-  if (guild.iconURL()) embed.setThumbnail(`${guild.iconURL()}`);
-  embed.setColor("#1ED760");
-  embed.setDescription(`<t:${Math.round(Date.now() / 1000)}:R>`);
-  client.channels.cache.get(`${process.env.DEV_CHANNEL}`).send({ embeds: [embed] });
-});
-
-client.on("guildDelete", (guild) => {
-  let embed = new discord.EmbedBuilder();
-  embed.setTitle("Left Server");
-  embed.addFields({ name: "Name", value: `${guild.name}` }, { name: "ID", value: `${guild.id}` });
-  if (guild.iconURL()) embed.setThumbnail(`${guild.iconURL()}`);
-  embed.setColor("#FF1418");
-  embed.setDescription(`<t:${Math.round(Date.now() / 1000)}:R>`);
-  client.channels.cache.get(`${process.env.DEV_CHANNEL}`).send({ embeds: [embed] });
-});
-
 client.on("interactionCreate", async (interaction) => {
   if (!interaction.isChatInputCommand()) return;
   if (interaction.user.bot) return;
