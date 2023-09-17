@@ -10,7 +10,7 @@ const Data = require("./userSchema.js");
 module.exports.cronSchedule = cron.schedule(
   "0 0 0 * * *",
   async () => {
-    const atRandom = Math.ceil(Math.random() * 200);
+    const atRandom = Math.ceil(Math.random() * 300);
     const selectedArtist = artists[atRandom];
     console.log(Date.now(), "TODAY'S Selected artist", selectedArtist.artist, atRandom);
     let publicData = await Data.findOne({ userID: "Public" });

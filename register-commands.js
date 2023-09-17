@@ -15,7 +15,7 @@ const commands = [
       },
       {
         name: "rounds",
-        description: "How many rounds?",
+        description: "Number of guesses allowed",
         type: 4,
         required: false,
       },
@@ -51,11 +51,11 @@ const commands = [
   },
   {
     name: "public",
-    description: "Participate in the public game",
+    description: "Participate in guesing today's mystery artist",
   },
   {
     name: "help",
-    description: "Displays information and guidance about the bot",
+    description: "Displays information and guidance about Spotle",
   },
 ];
 

@@ -170,10 +170,14 @@ module.exports = {
         userData.publicWins++;
       } else {
         if (
-          gameData.game.rounds - 1 <=
+          gameData.game.rounds <=
           gameData.game.participantInfo.find((ele) => ele.userID === interaction.user.id).roundsUsed
         ) {
-          embed.setTitle("Game Over :(");
+          embed.setTitle(
+            `Guess ${gameData.game.participantInfo.find((ele) => ele.userID === interaction.user.id).roundsUsed}/${
+              gameData.game.rounds
+            } Game Over :(`
+          );
           embed.setDescription(
             `You guessed **${artistGuess.artist}**\nCorrect artist was **${correctArtist.artist}**\nBetter luck next time!`
           );
@@ -196,7 +200,7 @@ module.exports = {
       if (gameData.userID !== userData.userID) userData.customWins++;
     } else {
       if (gameData.game.rounds - 1 <= gameData.game.roundsUsed) {
-        embed.setTitle("Game Over :(");
+        embed.setTitle(`Guess ${gameData.game.roundsUsed + 1}/${gameData.game.rounds} Game Over :(`);
         embed.setDescription(
           `${interaction.user.username} guessed **${artistGuess.artist}**\nCorrect artist was **${correctArtist.artist}**\nBetter luck next time!`
         );

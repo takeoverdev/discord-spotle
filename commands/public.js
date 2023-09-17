@@ -25,7 +25,16 @@ module.exports = {
         content: `You beat today's challenge in **${
           publicData.game.participantInfo.find((ele) => ele.userID === interaction.user.id).roundsUsed
         }** rounds\nResets <t:${daysSinceUnix * day}:R>`,
-        ephemeral: true,
+        ephemeral: false,
+      });
+    }
+    if (publicData.game.participantInfo.find((ele) => ele.userID === interaction.user.id).roundsUsed >= 10) {
+      const day = 60 * 60 * 24;
+      let daysSinceUnix = Math.ceil(Date.now() / 1000 / day);
+      console.log(daysSinceUnix);
+      return await interaction.reply({
+        content: `You've used all your guesses for today's challenge!\nResets <t:${daysSinceUnix * day}:R>`,
+        ephemeral: false,
       });
     }
     publicData.game.participants.push(interaction.user.id);
