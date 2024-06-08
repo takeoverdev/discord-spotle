@@ -30,25 +30,25 @@ function check(category, guess, correct) {
   guess = String(guess);
   correct = String(correct);
   if (category == "debut") {
-    if (guess == correct) return "<:correct:1149314439594639410>";
+    if (guess == correct) return "<:correct:1249067663427375175>";
     let range = 5;
     if (Number(correct) >= Number(guess) - range && Number(correct) <= Number(guess) + range) {
       // check range
-      return "<:soclose:1149314435542941716>";
+      return "<:soclose:1249064118174879784>";
     }
-    return "<:incorrect:1149314437182914570>";
+    return "<:incorrect:1249067850451386478>";
   }
   if (category == "size") {
-    if (guess == correct) return "<:correct:1149314439594639410>";
-    return "<:incorrect:1149314437182914570>";
+    if (guess == correct) return "<:correct:1249067663427375175>";
+    return "<:incorrect:1249067850451386478>";
   }
   if (category == "rank") {
-    if (guess == correct) return "<:correct:1149314439594639410>";
+    if (guess == correct) return "<:correct:1249067663427375175>";
     let range = 50;
     if (Number(correct) >= Number(guess) - range && Number(correct) <= Number(guess) + range) {
-      return "<:soclose:1149314435542941716>";
+      return "<:soclose:1249064118174879784>";
     }
-    return "<:incorrect:1149314437182914570>";
+    return "<:incorrect:1249067850451386478>";
   }
   if (category == "rankHigherLower") {
     if (guess > correct) {
@@ -60,17 +60,17 @@ function check(category, guess, correct) {
     }
   }
   if (category == "gender") {
-    if (guess == correct) return "<:correct:1149314439594639410>";
-    return "<:incorrect:1149314437182914570>";
+    if (guess == correct) return "<:correct:1249067663427375175>";
+    return "<:incorrect:1249067850451386478>";
   }
   if (category == "genre") {
-    if (guess == correct) return "<:correct:1149314439594639410>";
-    return "<:incorrect:1149314437182914570>";
+    if (guess == correct) return "<:correct:1249067663427375175>";
+    return "<:incorrect:1249067850451386478>";
   }
   if (category == "country") {
-    if (guess == correct) return "<:correct:1149314439594639410>";
-    if (getContinent(guess) == getContinent(correct)) return "<:soclose:1149314435542941716>";
-    return "<:incorrect:1149314437182914570>";
+    if (guess == correct) return "<:correct:1249067663427375175>";
+    if (getContinent(guess) == getContinent(correct)) return "<:soclose:1249064118174879784>";
+    return "<:incorrect:1249067850451386478>";
   }
 }
 
