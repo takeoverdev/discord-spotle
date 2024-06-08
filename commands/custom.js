@@ -1,14 +1,9 @@
 const discord = require("discord.js");
 const artists = require("../artists.json");
-const mongoose = require("mongoose");
-mongoose.connect(process.env.MONGO_CONNECTION_TOKEN);
-const Data = require("../userSchema.js");
-const { getAverageColor } = require("fast-average-color-node");
 
 module.exports = {
   info: new discord.SlashCommandBuilder().setName("custom"),
-  async execute(interaction) {
-    let userData = await Data.findOne({ userID: interaction.user.id }).catch((err) => console.log(err));
+  async execute(interaction, userData, Data) {
     let rounds;
     if (!interaction.options.get("rounds")) {
       rounds = 10;
@@ -21,8 +16,7 @@ module.exports = {
         content: "The artist must be in Spotify's Top 1000 and written exactly as displayed on Spotify",
       });
 
-    if (Number(rounds) < 1 || Number(rounds) > 1000)
-      return await interaction.reply("Enter a valid amount of rounds between 1-1000");
+    if (Number(rounds) < 1 || Number(rounds) > 1000) return await interaction.reply("Enter a valid amount of rounds between 1-1000");
 
     const embed = new discord.EmbedBuilder();
     embed.setTitle("New Game");
@@ -34,16 +28,7 @@ module.exports = {
     }
 
     if (artists.find((ele) => ele.artist.toLowerCase() == interaction.options.get("artist").value.toLowerCase())) {
-      let artist = artists.find(
-        (ele) => ele.artist.toLowerCase() == interaction.options.get("artist").value.toLowerCase()
-      );
-      let avgColor = await getAverageColor(artist.image_uri, {
-        ignoredColor: [
-          [255, 255, 255, 255],
-          [0, 0, 0, 255],
-        ],
-      });
-      embed.setColor(avgColor.hex);
+      let artist = artists.find((ele) => ele.artist.toLowerCase() == interaction.options.get("artist").value.toLowerCase());
       embed.setDescription(`**${artist.artist}** with **${rounds}** rounds`);
       embed.setThumbnail(artist.image_uri);
       embed.addFields(
@@ -71,10 +56,7 @@ module.exports = {
       embeds: [embed],
       ephemeral: true,
     });
-    let embedAlert = new discord.EmbedBuilder()
-      .setTitle("New Game")
-      .setDescription(`<@${interaction.user.id}> started a new Spotle game with **${rounds}** rounds.`)
-      .setColor("#1ED760");
+    let embedAlert = new discord.EmbedBuilder().setTitle("New Game").setDescription(`<@${interaction.user.id}> started a new Spotle game with **${rounds}** rounds.`).setColor("#1ED760");
     try {
       await interaction.followUp({ embeds: [embedAlert] });
     } catch (err) {}

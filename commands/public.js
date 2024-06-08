@@ -1,11 +1,8 @@
 const discord = require("discord.js");
-const mongoose = require("mongoose");
-mongoose.connect(process.env.MONGO_CONNECTION_TOKEN);
-const Data = require("../userSchema.js");
 
 module.exports = {
   info: new discord.SlashCommandBuilder().setName("public"),
-  async execute(interaction) {
+  async execute(interaction, userData, Data) {
     const publicData = await Data.findOne({ userID: "Public" });
     if (!publicData.game.artist) return interaction.reply("Error whilst attempting to join");
     await Data.updateOne({ userID: interaction.user.id }, { $unset: { game: {} } }); // Unset a field in doc
@@ -22,9 +19,7 @@ module.exports = {
       let daysSinceUnix = Math.ceil(Date.now() / 1000 / day);
       console.log(daysSinceUnix);
       return await interaction.reply({
-        content: `You beat today's challenge in **${
-          publicData.game.participantInfo.find((ele) => ele.userID === interaction.user.id).roundsUsed
-        }** rounds\nResets <t:${daysSinceUnix * day}:R>`,
+        content: `You beat today's challenge in **${publicData.game.participantInfo.find((ele) => ele.userID === interaction.user.id).roundsUsed}** rounds\nResets <t:${daysSinceUnix * day}:R>`,
         ephemeral: false,
       });
     }

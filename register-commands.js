@@ -51,7 +51,7 @@ const commands = [
   },
   {
     name: "public",
-    description: "Participate in guesing today's mystery artist",
+    description: "Participate in guessing today's mystery artist",
   },
   {
     name: "help",

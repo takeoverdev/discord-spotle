@@ -1,7 +1,4 @@
 const discord = require("discord.js");
-const mongoose = require("mongoose");
-require("dotenv").config();
-mongoose.connect(process.env.MONGO_CONNECTION_TOKEN);
 const client = require("../client.js").clientOn;
 
 module.exports = {

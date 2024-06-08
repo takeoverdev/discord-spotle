@@ -1,6 +1,4 @@
 const discord = require("discord.js");
-const mongoose = require("mongoose");
-mongoose.connect(process.env.MONGO_CONNECTION_TOKEN);
 
 module.exports = {
   info: new discord.SlashCommandBuilder().setName("help"),

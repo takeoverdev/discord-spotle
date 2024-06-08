@@ -1,2 +1,5 @@
 node_modules
 .env
+register-commands.js
+register-dev-commands.js
+package-lock.json

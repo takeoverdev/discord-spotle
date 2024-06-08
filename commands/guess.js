@@ -1,10 +1,6 @@
 const discord = require("discord.js");
-const mongoose = require("mongoose");
-mongoose.connect(process.env.MONGO_CONNECTION_TOKEN);
 const artists = require("../artists.json");
-const Data = require("../userSchema.js");
 const continents = require("../continents.json");
-const { getAverageColor } = require("fast-average-color-node");
 
 function getContinent(country) {
   if (continents.africa.includes(country.toUpperCase())) {
@@ -76,17 +72,12 @@ function check(category, guess, correct) {
 
 module.exports = {
   info: new discord.SlashCommandBuilder().setName("guess"),
-  async execute(interaction) {
-    const userData = await Data.findOne({ userID: interaction.user.id });
+  async execute(interaction, userData, Data) {
     const gameData = await Data.findOne({ "game.participants": interaction.user.id });
     if (!gameData) return interaction.reply(`You aren't in a game`);
-    let artistGuess = artists.find(
-      (ele) => ele.artist.toLowerCase() == interaction.options.get("artist").value.toLowerCase()
-    );
-    if (gameData.game.channel !== interaction.channelId && gameData.userID !== "Public")
-      return interaction.reply("You must be in the channel the game was started in");
-    if (!artistGuess)
-      return interaction.reply("The artist must be in Spotify's Top 1000 and written exactly as displayed on Spotify");
+    let artistGuess = artists.find((ele) => ele.artist.toLowerCase() == interaction.options.get("artist").value.toLowerCase());
+    if (gameData.game.channel !== interaction.channelId && gameData.userID !== "Public") return interaction.reply("You must be in the channel the game was started in");
+    if (!artistGuess) return interaction.reply("The artist must be in Spotify's Top 1000 and written exactly as displayed on Spotify");
     let correctArtist = artists.find((ele) => ele.artist.toLowerCase() == gameData.game.artist.toLowerCase());
     let embed = new discord.EmbedBuilder();
     embed.addFields(
@@ -101,16 +92,8 @@ module.exports = {
         inline: true,
       },
       {
-        name: `${check(
-          "rank",
-          artists.findIndex((ele) => ele == artistGuess) + 1,
-          artists.findIndex((ele) => ele == correctArtist) + 1
-        )} Listener Rank`,
-        value: `#${artists.indexOf(artistGuess) + 1} ${check(
-          "rankHigherLower",
-          artists.findIndex((ele) => ele == artistGuess) + 1,
-          artists.findIndex((ele) => ele == correctArtist) + 1
-        )}`,
+        name: `${check("rank", artists.findIndex((ele) => ele == artistGuess) + 1, artists.findIndex((ele) => ele == correctArtist) + 1)} Listener Rank`,
+        value: `#${artists.indexOf(artistGuess) + 1} ${check("rankHigherLower", artists.findIndex((ele) => ele == artistGuess) + 1, artists.findIndex((ele) => ele == correctArtist) + 1)}`,
         inline: true,
       },
       {
@@ -130,57 +113,30 @@ module.exports = {
       }
     );
     embed.setThumbnail(`${artistGuess.image_uri}`);
-    let avgColor = await getAverageColor(artistGuess.image_uri, {
-      ignoredColor: [
-        [255, 255, 255, 255],
-        [0, 0, 0, 255],
-      ],
-    });
-    embed.setColor(avgColor.hex);
 
     // Public
     if (gameData.userID === "Public") {
       if (!gameData.game.participantInfo.find((ele) => ele.userID === interaction.user.id)) {
         gameData.game.participantInfo.push({ userID: interaction.user.id, roundsUsed: 0, won: false });
       }
-      if (
-        gameData.game.participantInfo.find((ele) => ele.userID === interaction.user.id).roundsUsed >=
-        gameData.game.rounds
-      ) {
+      if (gameData.game.participantInfo.find((ele) => ele.userID === interaction.user.id).roundsUsed >= gameData.game.rounds) {
         return await interaction.reply("You have used all your rounds for today's challenge :(");
       }
       gameData.game.participantInfo.find((ele) => ele.userID === interaction.user.id).roundsUsed++;
       userData.totalGuesses++;
 
-      embed.setTitle(
-        `Guess ${gameData.game.participantInfo.find((ele) => ele.userID === interaction.user.id).roundsUsed}/${
-          gameData.game.rounds
-        }`
-      );
+      embed.setTitle(`Guess ${gameData.game.participantInfo.find((ele) => ele.userID === interaction.user.id).roundsUsed}/${gameData.game.rounds}`);
       embed.setDescription(`You guessed **${artistGuess.artist}**`);
       embed.setFooter({ text: `Public mode` });
       if (artistGuess === correctArtist) {
-        embed.setTitle(
-          `Guess ${gameData.game.participantInfo.find((ele) => ele.userID === interaction.user.id).roundsUsed}/${
-            gameData.game.rounds
-          } WINNER!!`
-        );
+        embed.setTitle(`Guess ${gameData.game.participantInfo.find((ele) => ele.userID === interaction.user.id).roundsUsed}/${gameData.game.rounds} WINNER!!`);
         gameData.game.participants.splice(gameData.game.participants.indexOf(`${interaction.user.id}`), 1);
         gameData.game.participantInfo.find((ele) => ele.userID === interaction.user.id).won = true;
         userData.publicWins++;
       } else {
-        if (
-          gameData.game.rounds <=
-          gameData.game.participantInfo.find((ele) => ele.userID === interaction.user.id).roundsUsed
-        ) {
-          embed.setTitle(
-            `Guess ${gameData.game.participantInfo.find((ele) => ele.userID === interaction.user.id).roundsUsed}/${
-              gameData.game.rounds
-            } Game Over :(`
-          );
-          embed.setDescription(
-            `You guessed **${artistGuess.artist}**\nCorrect artist was **${correctArtist.artist}**\nBetter luck next time!`
-          );
+        if (gameData.game.rounds <= gameData.game.participantInfo.find((ele) => ele.userID === interaction.user.id).roundsUsed) {
+          embed.setTitle(`Guess ${gameData.game.participantInfo.find((ele) => ele.userID === interaction.user.id).roundsUsed}/${gameData.game.rounds} Game Over :(`);
+          embed.setDescription(`You guessed **${artistGuess.artist}**\nCorrect artist was **${correctArtist.artist}**\nBetter luck next time!`);
           gameData.game.participants.splice(gameData.game.participants.indexOf(`${interaction.user.id}`), 1);
         }
       }
@@ -201,9 +157,7 @@ module.exports = {
     } else {
       if (gameData.game.rounds - 1 <= gameData.game.roundsUsed) {
         embed.setTitle(`Guess ${gameData.game.roundsUsed + 1}/${gameData.game.rounds} Game Over :(`);
-        embed.setDescription(
-          `${interaction.user.username} guessed **${artistGuess.artist}**\nCorrect artist was **${correctArtist.artist}**\nBetter luck next time!`
-        );
+        embed.setDescription(`${interaction.user.username} guessed **${artistGuess.artist}**\nCorrect artist was **${correctArtist.artist}**\nBetter luck next time!`);
         await Data.updateOne({ userID: gameData.userID }, { $unset: { game: {} } }); // Unset a field in doc
       } else {
         gameData.game.roundsUsed++;
